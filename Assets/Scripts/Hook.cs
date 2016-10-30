@@ -10,6 +10,8 @@ public class Hook : MonoBehaviour
 	[System.NonSerialized]
 	public SpringJoint2D springJoint2d;
 	[System.NonSerialized]
+	public SliderJoint2D sliderJoint2d;
+	[System.NonSerialized]
 	public SpriteRenderer spriteRenderer;
 	[System.NonSerialized]
 	public BoxCollider2D boxCollider2d;
@@ -21,6 +23,7 @@ public class Hook : MonoBehaviour
     {
 	    rigidbody2d = GetComponent<Rigidbody2D>();
 	    springJoint2d = GetComponent<SpringJoint2D>();
+	    sliderJoint2d = GetComponent<SliderJoint2D>();
 	    spriteRenderer = GetComponent<SpriteRenderer>();
 	    boxCollider2d = GetComponent<BoxCollider2D>();
     }
@@ -39,6 +42,7 @@ public class Hook : MonoBehaviour
 		rigidbody2d.velocity = Vector2.zero;
 		rigidbody2d.constraints = RigidbodyConstraints2D.FreezeAll;
 		springJoint2d.enabled = true;
+		//sliderJoint2d.enabled = true;
 		isStopping = true;
 	}
 }

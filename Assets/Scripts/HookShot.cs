@@ -15,8 +15,7 @@ public class HookShot : MonoBehaviour
 	[SerializeField]
 	GameObject hookShotDisableRange;
 	GameObject returnPoint;
-	[SerializeField]
-	int speed;
+	public int speed;
 	
     void Awake ()
     {	
@@ -84,6 +83,7 @@ public class HookShot : MonoBehaviour
 	{
 		_hook.rigidbody2d.constraints = RigidbodyConstraints2D.FreezeRotation;
 		_hook.springJoint2d.enabled = false;
+		_hook.sliderJoint2d.enabled = false;
 		_hook.rigidbody2d.velocity = Vector2.zero;
 		_hook.transform.localPosition = Vector2.zero;
 		_hook.spriteRenderer.enabled = false;

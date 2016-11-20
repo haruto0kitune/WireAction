@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using System.IO;
+using System.Reflection;
+using System.Reflection.Emit;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using UniRx;
@@ -16,18 +20,31 @@ public class DebugInformation : MonoBehaviour
 	Text playerHookShotSpeed;
 	[SerializeField]
 	Text playerSpeedLimit;
-	
-    void Awake ()
-    {
-	    
-    }
+	[SerializeField]
+	Text playerRigidbody2DGravityScale;
+    JsonObjects JsonObjects;
 
-	void Start () 
+	IEnumerator Start () 
 	{
-		this.ObserveEveryValueChanged(x => JsonObjects.playerSpringJoint2D.distance).SubscribeToText(playerSpringJoint2DDistance);
-	    this.ObserveEveryValueChanged(x => JsonObjects.playerSpringJoint2D.dampingRatio).SubscribeToText(playerSpringJoint2DDampingRatio);
-	    this.ObserveEveryValueChanged(x => JsonObjects.playerSpringJoint2D.frequency).SubscribeToText(playerSpringJoint2DFrequency);
-		this.ObserveEveryValueChanged(x => JsonObjects.playerHookShot.speed).SubscribeToText(playerHookShotSpeed);
-		this.ObserveEveryValueChanged(x => JsonObjects.playerSpeedLimit.speed).SubscribeToText(playerSpeedLimit);
+        JsonObjects = GameObject.Find("JsonObjects").GetComponent<JsonObjects>();
+        yield return new WaitUntil(() => JsonObjects.hasFinishedCopy);
+
+        this.ObserveEveryValueChanged(x => JsonObjects.dictionary)
+            .Subscribe(_ =>
+            {
+                // PlayerSpringJoint2D
+                playerSpringJoint2DDistance.text = _["PlayerSpringJoint2D"].GetField("distance").n.ToString();
+                playerSpringJoint2DDampingRatio.text = _["PlayerSpringJoint2D"].GetField("dampingRatio").n.ToString();
+                playerSpringJoint2DFrequency.text = _["PlayerSpringJoint2D"].GetField("frequency").n.ToString();
+
+                // PlayerHookShot
+                playerHookShotSpeed.text = _["PlayerHookShot"].GetField("speed").n.ToString();
+
+                // PlayerSpeedLimit
+                playerSpeedLimit.text = _["PlayerSpeedLimit"].GetField("speed").n.ToString();
+
+                // PlayerRigidbody2D
+                playerRigidbody2DGravityScale.text = _["PlayerRigidbody2D"].GetField("gravityScale").n.ToString();
+            });
     }
 }
